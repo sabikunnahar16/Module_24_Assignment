@@ -6,6 +6,7 @@ A responsive user management app built with React, Zustand, and the JSONPlacehol
 
 - Fetches users from `https://jsonplaceholder.typicode.com/users` with `useEffect`
 - Displays user name, email, phone, and detailed profile information
+- Includes Bangla names with Bangladesh, Australia, UK, USA, Pakistan, and Singapore addresses
 - Add or remove users from a favorites list
 - Persists favorites in browser Local Storage
 - Zustand store manages favorite state

@@ -3,6 +3,59 @@ import { STORAGE_KEY, useFavoriteStore } from './store/favoriteStore';
 
 const USERS_API = 'https://jsonplaceholder.typicode.com/users';
 
+const LOCALIZED_PROFILES = {
+  1: {
+    name: 'আয়েশা রহমান',
+    username: 'ayesha.rahman',
+    address: { suite: 'ফ্ল্যাট ৪বি', street: 'গুলশান এভিনিউ', city: 'ঢাকা', zipcode: '1212', country: 'বাংলাদেশ' },
+  },
+  2: {
+    name: 'রাফি হাসান',
+    username: 'rafi.hasan',
+    address: { suite: 'বাড়ি ১২', street: 'জিইসি মোড়', city: 'চট্টগ্রাম', zipcode: '4000', country: 'বাংলাদেশ' },
+  },
+  3: {
+    name: 'নুসরাত জাহান',
+    username: 'nusrat.jahan',
+    address: { suite: 'বাড়ি ৮', street: 'শাহ মখদুম অ্যাভিনিউ', city: 'রাজশাহী', zipcode: '6000', country: 'বাংলাদেশ' },
+  },
+  4: {
+    name: 'তানভীর আহমেদ',
+    username: 'tanvir.ahmed',
+    address: { suite: 'অ্যাপার্টমেন্ট ৫এ', street: 'বনানী রোড ১১', city: 'ঢাকা', zipcode: '1213', country: 'বাংলাদেশ' },
+  },
+  5: {
+    name: 'সুমাইয়া আক্তার',
+    username: 'sumaiya.akter',
+    address: { suite: 'বাড়ি ২১', street: 'জুবিলি রোড', city: 'সিলেট', zipcode: '3100', country: 'বাংলাদেশ' },
+  },
+  6: {
+    name: 'ওমর ফারুক',
+    username: 'omar.faruk',
+    address: { suite: 'Unit 8', street: 'George Street', city: 'Sydney', zipcode: '2000', country: 'Australia' },
+  },
+  7: {
+    name: 'মেহজাবিন চৌধুরী',
+    username: 'mehjabin.chowdhury',
+    address: { suite: 'Apt 12', street: 'Baker Street', city: 'London', zipcode: 'NW1 6XE', country: 'United Kingdom' },
+  },
+  8: {
+    name: 'ইমরান কবির',
+    username: 'imran.kabir',
+    address: { suite: 'Apt 4C', street: '5th Avenue', city: 'New York', zipcode: '10001', country: 'United States' },
+  },
+  9: {
+    name: 'ফারহানা নাজ',
+    username: 'farhana.naz',
+    address: { suite: 'Block B, 3rd Floor', street: 'Gulberg Main Boulevard', city: 'Lahore', zipcode: '54660', country: 'Pakistan' },
+  },
+  10: {
+    name: 'সাদিয়া ইসলাম',
+    username: 'sadia.islam',
+    address: { suite: 'Floor 2', street: 'Orchard Road', city: 'Singapore', zipcode: '238823', country: 'Singapore' },
+  },
+};
+
 function UserAvatar({ user, large = false }) {
   return (
     <div className={`avatar ${large ? 'avatar-large' : ''}`} aria-hidden="true">
@@ -64,7 +117,8 @@ function DetailsModal({ user, onClose }) {
           <div><span>Phone</span><strong>{user.phone}</strong></div>
           <div><span>Website</span><strong>{user.website}</strong></div>
           <div><span>Company</span><strong>{user.company.name}</strong></div>
-          <div><span>Address</span><strong>{user.address.suite}, {user.address.street}, {user.address.city}</strong></div>
+          <div><span>Address</span><strong>{user.address.suite}, {user.address.street}, {user.address.city}, {user.address.zipcode}</strong></div>
+          <div><span>Country</span><strong>{user.address.country}</strong></div>
         </div>
       </section>
     </div>
@@ -85,7 +139,12 @@ function App() {
         setStatus('loading');
         const response = await fetch(USERS_API);
         if (!response.ok) throw new Error('Unable to fetch users.');
-        setUsers(await response.json());
+        const apiUsers = await response.json();
+        setUsers(apiUsers.map((user) => ({
+          ...user,
+          ...LOCALIZED_PROFILES[user.id],
+          address: { ...user.address, ...LOCALIZED_PROFILES[user.id].address },
+        })));
         setStatus('success');
       } catch (fetchError) {
         setError(fetchError.message);
